@@ -1,0 +1,11 @@
+name: macOS checks
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Policy tests and app type check
+        run: ./scripts/test.sh
+      - name: Compile release executable
+        run: swiftc -O -target "$(uname -m)-apple-macos13.0" Sources/ScrollPolicy.swift Sources/main.swift -o build/ScrollFix -framework AppKit -framework ApplicationServices -framework ServiceManagement
