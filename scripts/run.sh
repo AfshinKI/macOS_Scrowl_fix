@@ -5,9 +5,20 @@ if ! xcrun --find swiftc >/dev/null 2>&1; then
   echo 'Install Apple Command Line Tools with: xcode-select --install, then run this again.' >&2
   exit 1
 fi
-APP="$HOME/Applications/Scroll Fix.app"
+# Some Macs have a root-owned ~/Applications directory. Do not require sudo
+# or change ownership of the user's folders just to install this app.
+INSTALL_DIR="$HOME/Applications"
+if ! mkdir -p "$INSTALL_DIR" 2>/dev/null || [[ ! -w "$INSTALL_DIR" ]]; then
+  INSTALL_DIR="$HOME"
+  echo "Your Applications folder is not writable; installing in $INSTALL_DIR instead."
+fi
+APP="$INSTALL_DIR/Scroll Fix.app"
+if [[ -e "$APP" && ! -w "$APP/Contents/MacOS" ]]; then
+  echo "Cannot update $APP because it is not writable. Move that app aside and rerun this script." >&2
+  exit 1
+fi
 BUILD="$PWD/build/Scroll Fix.app"
-mkdir -p "$BUILD/Contents/MacOS" "$HOME/Applications" "$PWD/build/module-cache"
+mkdir -p "$BUILD/Contents/MacOS" "$PWD/build/module-cache"
 xcrun swiftc -O -target "$(uname -m)-apple-macos13.0" -module-cache-path "$PWD/build/module-cache" Sources/ScrollPolicy.swift Sources/main.swift -o "$BUILD/Contents/MacOS/ScrollFix" -framework AppKit -framework ApplicationServices -framework ServiceManagement
 cat > "$BUILD/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>

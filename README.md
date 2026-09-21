@@ -8,14 +8,14 @@ A small native Swift menu bar utility for independent mouse and trackpad scroll 
 git clone git@github.com:AfshinKI/macOS_Scrowl_fix.git "$HOME/macOS_Scrowl_fix" && bash "$HOME/macOS_Scrowl_fix/scripts/run.sh"
 ```
 
-The command builds for your Mac's architecture, signs locally, installs to `~/Applications/Scroll Fix.app`, and launches it. GitHub SSH access is required for this clone URL. If Command Line Tools are missing, run `xcode-select --install`, finish Apple's installer, then rerun the script.
+The command builds for your Mac's architecture, signs locally, installs to `~/Applications/Scroll Fix.app`, and launches it. If `~/Applications` is not writable, it installs to `~/Scroll Fix.app` instead, without requiring sudo. The script prints the actual installation path. GitHub SSH access is required for this clone URL. If Command Line Tools are missing, run `xcode-select --install`, finish Apple's installer, then rerun the script.
 
-For subsequent launches, use `open "$HOME/Applications/Scroll Fix.app"`. To rebuild after pulling changes, run `bash "$HOME/macOS_Scrowl_fix/scripts/run.sh"`.
+For subsequent launches, open Scroll Fix from its installed location. To rebuild after pulling changes, run `bash "$HOME/macOS_Scrowl_fix/scripts/run.sh"`.
 
 ## First launch
 
 1. Quit Scroll Reverser and other utilities that change scrolling; otherwise they may reverse each other's changes.
-2. In System Settings → Privacy & Security → Accessibility, enable **Scroll Fix**. If absent, click **+** and select `~/Applications/Scroll Fix.app` (Command-Shift-G lets you enter that path).
+2. In System Settings → Privacy & Security → Accessibility, enable **Scroll Fix**. If absent, click **+** and select the installed app (`~/Applications/Scroll Fix.app`, or `~/Scroll Fix.app` if the installer used the fallback). The Help dialog also displays its actual location (Command-Shift-G lets you enter that path).
 3. Click the up/down arrow icon in the menu bar. Its status should become **Active** automatically after permission is granted.
 
 The default reverses vertical mouse-wheel scrolling and preserves the trackpad. Reversal is relative to your existing macOS scrolling setting.
@@ -55,4 +55,4 @@ This is an independent implementation inspired by Scroll Reverser's controls, no
 
 `test.sh` runs policy regression checks and type-checks the complete AppKit app. The application is built directly with `swiftc`; Xcode IDE is not required. The installer uses ad-hoc signing, not Apple notarization. Test real hardware, Accessibility permission flow, sleep/wake, and login behavior on your Mac before relying on it daily.
 
-To uninstall: disable Launch at login, quit the app, then remove `~/Applications/Scroll Fix.app`. To remove saved preferences, run `defaults delete com.afshinki.scrollfix`.
+To uninstall: disable Launch at login, quit the app, then remove the app from its installed location. To remove saved preferences, run `defaults delete com.afshinki.scrollfix`.
